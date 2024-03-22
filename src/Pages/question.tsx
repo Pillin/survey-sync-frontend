@@ -1,48 +1,24 @@
 import {
   useContext,
   Show,
-  createMemo,
-  createSignal,
-  createEffect,
+  createMemo
 } from "solid-js";
-import { Context, answersSignal, questionsSignal } from "../Contexts/global";
-import { useLocation, useParams } from "@solidjs/router";
+import { Context } from "../Contexts/global";
 import { Card } from "../Components/Card";
 import { Button } from "../Components/button";
+import useNavigation from "../Hooks/useNavigation";
+import useQuestion from "../Hooks/useQuestion";
 
 const QuestionPage = () => {
   const { sendMessage } = useContext(Context);
-  const location = useLocation();
-  const [localPathName, setLocalPathName] = createSignal(location.pathname);
-  const [active, setActive] = createSignal("");
-  const params = useParams<{ id: string }>();
-
-  const title = createMemo(() => questionsSignal()[params.id].title);
-  const questionId = createMemo(() => questionsSignal()[params.id].id);
-  const options = createMemo(() =>
-    Object.values(questionsSignal()[params.id].options),
-  );
-
-  const totalVotes = createMemo(() => {
-    let total = 0;
-    options().forEach((option) => {
-      total += answersSignal()?.[questionId()]?.[option.id] || 0;
-    });
-    return total;
-  });
-
-  createEffect(() => {
-    if (localPathName() !== location.pathname) {
-      setActive("");
-      setLocalPathName(location.pathname);
-    }
-  });
+  const { active, setActive } = useNavigation()
+  const { id, title, options, questionId, totalVotes } = useQuestion()
 
   const handleMessage = (questionId: string, optionId: string) =>
     sendMessage({ type: "vote", questionId, optionId });
 
   return (
-    <Show when={params.id} keyed>
+    <Show when={id} keyed>
       <section class="flex flex-col gap-8">
         <Card description={title()} title={`Question ${questionId()}`} />
         <div class="flex flex-wrap justify-around" role="group">

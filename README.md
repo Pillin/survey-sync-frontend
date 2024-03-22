@@ -27,5 +27,3 @@ Your app is ready to be deployed!
 
 Learn more about deploying your application with the [documentations](https://vitejs.dev/guide/static-deploy.html)
 
-# test-solid-partykit
-# survey-sync-frontend
