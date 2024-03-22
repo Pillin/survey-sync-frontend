@@ -1,6 +1,6 @@
 import { onCleanup, onMount } from "solid-js";
 import PartySocket from "partysocket";
-import { getOrCreateUserId } from "./getOrCreateUserId";
+import getOrCreateUserId from "./getOrCreateUserId";
 
 const usePartyKit = ({ host, room, handleMessage }: any) => {
   const userId = getOrCreateUserId();
